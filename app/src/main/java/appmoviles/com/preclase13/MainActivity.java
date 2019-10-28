@@ -10,11 +10,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -23,9 +30,7 @@ import java.util.List;
 
 import appmoviles.com.preclase13.model.data.CRUDAlbum;
 import appmoviles.com.preclase13.model.entity.Album;
-import appmoviles.com.preclase13.util.HTTPSWebUtilDomi;
-import appmoviles.com.preclase13.model.data.CRUDAlbum;
-import appmoviles.com.preclase13.model.entity.Album;
+import appmoviles.com.preclase13.model.entity.User;
 import appmoviles.com.preclase13.util.HTTPSWebUtilDomi;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,11 +40,34 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Album> list;
     Button addAlbumBtn;
     Button friendsBtn;
+    RelativeLayout controlPanel;
+    FirebaseAuth auth;
+    FirebaseDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
+
+        db.getReference().child("usuarios")
+                .child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                Toast.makeText(MainActivity.this,
+                        "Hola "+user.getName(),
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         //0...
         ActivityCompat.requestPermissions(this, new String[]{
@@ -56,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         LVAlbum.setAdapter(adapter);
         addAlbumBtn = findViewById(R.id.addAlbumBtn);
         friendsBtn = findViewById(R.id.friendsBtn);
+        controlPanel = findViewById(R.id.controlPanel);
 
 
         LVAlbum.setOnItemClickListener(new AdapterView.OnItemClickListener() {
