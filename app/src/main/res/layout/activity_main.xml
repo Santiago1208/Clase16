@@ -5,9 +5,12 @@
 
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="90dp"
+        android:layout_marginBottom="90dp"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
         <ListView
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/LVAlbum">
@@ -25,5 +28,22 @@
         android:layout_marginBottom="20dp"
         android:id="@+id/addAlbumBtn"
         android:text="@string/plus"/>
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/signOutBtn"
+        android:text="C"/>
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/friendsBtn"
+        android:text="A"/>
 
 </RelativeLayout>

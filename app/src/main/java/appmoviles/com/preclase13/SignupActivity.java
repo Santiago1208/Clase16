@@ -1,13 +1,26 @@
 package appmoviles.com.preclase13;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import appmoviles.com.preclase13.model.entity.User;
 import appmoviles.com.preclase13.view.custom.ScrolledDatePicker;
 
 public class SignupActivity extends AppCompatActivity {
@@ -21,10 +34,19 @@ public class SignupActivity extends AppCompatActivity {
     private EditText signin_repassword;
     private Button login_signin;
 
+    //NPM
+    //NODE.JS
+
+    FirebaseAuth auth;
+    FirebaseDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
 
         signin_email = findViewById(R.id.signin_email);
         signin_name = findViewById(R.id.signin_name);
@@ -34,6 +56,73 @@ public class SignupActivity extends AppCompatActivity {
         signin_password = findViewById(R.id.signin_password);
         signin_repassword = findViewById(R.id.signin_repassword);
         login_signin = findViewById(R.id.login_signin);
-        
+
+
+        login_signin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (signin_email.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(SignupActivity.this, "El campo de email esta vacio", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (!signin_password.getText().toString()
+                        .equals(signin_repassword.getText().toString())) {
+                    Toast.makeText(SignupActivity.this, "Las contraseñas NO coinciden", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (signin_password.getText().toString().trim().length() < 10) {
+                    Toast.makeText(SignupActivity.this, "Las contraseñas debe tener mínimo 10 carácteres", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                auth.createUserWithEmailAndPassword(
+                        signin_email.getText().toString().trim(),
+                        signin_password.getText().toString().trim()
+                ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(Task<AuthResult> task) {
+                        try {
+                            if (task.isSuccessful()) {
+                                //Ya estamos logeados
+
+                                String birth = signin_age.getYear()
+                                        + "-" + (signin_age.getMonth() + 1)
+                                        + "-" + signin_age.getDayOfMonth();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                                Date date = sdf.parse(birth);
+
+
+                                User me = new User(
+                                        auth.getCurrentUser().getUid(),
+                                        signin_email.getText().toString().trim(),
+                                        signin_password.getText().toString().trim(),
+                                        signin_name.getText().toString().trim(),
+                                        signin_username.getText().toString(),
+                                        birth,
+                                        date.getTime());
+
+                                db.getReference().child("usuarios").child(me.getUid())
+                                        .setValue(me);
+
+                                Intent i = new Intent(SignupActivity.this, MainActivity.class);
+                                startActivity(i);
+                                finish();
+
+                            } else {
+                                Toast.makeText(SignupActivity.this, "" + task.getException(), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+
+
     }
 }

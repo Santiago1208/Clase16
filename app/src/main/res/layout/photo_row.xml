@@ -72,7 +72,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:id="@+id/deletePhotoBtn"
-        android:text="@string/deleteButton"/>
+        android:id="@+id/commentsPhotoBtn"
+        android:text="..."/>
 
 </RelativeLayout>

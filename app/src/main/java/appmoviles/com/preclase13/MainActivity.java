@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<Album> adapter;
     ArrayList<Album> list;
     Button addAlbumBtn;
+    Button friendsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         LVAlbum = findViewById(R.id.LVAlbum);
         LVAlbum.setAdapter(adapter);
         addAlbumBtn = findViewById(R.id.addAlbumBtn);
-
+        friendsBtn = findViewById(R.id.friendsBtn);
 
 
         LVAlbum.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -99,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        friendsBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(this, FriendListActivity.class);
+            startActivity(intent);
+        });
 
     }
 
