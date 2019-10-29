@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Album> list;
     private Button addAlbumBtn;
     private Button friendsBtn;
+    private Button signOutBtn;
     private Button syncBtn;
     private RelativeLayout controlPanel;
     FirebaseAuth auth;
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         addAlbumBtn = findViewById(R.id.addAlbumBtn);
         friendsBtn = findViewById(R.id.friendsBtn);
         controlPanel = findViewById(R.id.controlPanel);
+        signOutBtn = findViewById(R.id.signOutBtn);
         syncBtn = findViewById(R.id.syncBtn);
 
         LVAlbum.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -136,6 +138,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        signOutBtn.setOnClickListener(
+                (v) -> {
+                    
+                }
+        );
+
         syncBtn.setOnClickListener(
                 (v) -> {
 
@@ -153,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
     private void refreshTaskList() {
         HashMap<String, Album> group = CRUDAlbum.getAllAlbums();
         list.clear();
-        for(String key : group.keySet()){
+        for (String key : group.keySet()) {
             Album nAlbum = group.get(key);
             list.add(nAlbum);
         }
