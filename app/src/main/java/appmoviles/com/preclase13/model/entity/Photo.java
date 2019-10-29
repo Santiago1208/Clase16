@@ -8,15 +8,17 @@ public class Photo implements Serializable {
     private String name;
     private String description;
     private int views;
+    private String albumID;
 
     public Photo() {
     }
 
-    public Photo(String id, String name, String description, int views) {
+    public Photo(String id, String name, String description, int views, String albumID) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.views = views;
+        this.albumID = albumID;
     }
 
     public String getId() {
@@ -54,5 +56,13 @@ public class Photo implements Serializable {
     @Override
     public String toString() {
         return name;
+    }
+
+    public String getAlbumID() {
+        return albumID;
+    }
+
+    public void setAlbumID(String albumID) {
+        this.albumID = albumID;
     }
 }
