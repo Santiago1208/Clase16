@@ -3,7 +3,7 @@ package appmoviles.com.preclase13.model.data;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import appmoviles.com.preclase13.app.AlbumApp;
 import appmoviles.com.preclase13.model.driver.DBDriver;
@@ -37,10 +37,10 @@ public class CRUDPhoto {
     }
 
 
-    public static HashMap<String, Photo> getAllPhotosOfAlbum(Album album){
+    public static ArrayList<Photo> getAllPhotosOfAlbum(Album album){
         DBDriver driver = DBDriver.getInstance(AlbumApp.getAppContext());
         SQLiteDatabase db = driver.getReadableDatabase();
-        HashMap<String, Photo> group = new HashMap<>();
+        ArrayList<Photo> group = new ArrayList<>();
 
         String sql = "SELECT * FROM $TABLE WHERE $FID = '$VFID'";
         sql = sql
@@ -55,9 +55,8 @@ public class CRUDPhoto {
                 String name = cursor.getString(cursor.getColumnIndex(DBDriver.PHOTO_NAME));
                 String desc = cursor.getString(cursor.getColumnIndex(DBDriver.PHOTO_DESC));
                 int views = cursor.getInt(cursor.getColumnIndex(DBDriver.PHOTO_VIEWS));
-                String albumid = cursor.getString(cursor.getColumnIndex(DBDriver.FK_ALMBUM_PHOTO));
-                Photo task = new Photo(id, name, desc, views, albumid);
-                group.put(id,task);
+                Photo task = new Photo(id, name, desc, views);
+                group.add(task);
             }while (cursor.moveToNext());
         }
 

@@ -2,17 +2,18 @@ package appmoviles.com.preclase13.model.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 
 public class Album implements Serializable {
 
     private String id;
     private String name;
     private Date date;
-    private String userID;
 
     //Embedding
-    private HashMap<String, Photo> photos;
+    //9...
+    private List<Photo> photos;
+    //9...
 
     public Album() {
     }
@@ -51,21 +52,14 @@ public class Album implements Serializable {
     public String toString() {
         return this.name;
     }
-    public HashMap<String, Photo> getPhotos() {
+
+    //9...
+    public List<Photo> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(HashMap<String, Photo> photos) {
+    public void setPhotos(List<Photo> photos) {
         this.photos = photos;
     }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-
+    //9...
 }

@@ -3,8 +3,9 @@ package appmoviles.com.preclase13.model.data;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 
 import appmoviles.com.preclase13.app.AlbumApp;
 import appmoviles.com.preclase13.model.driver.DBDriver;
@@ -32,11 +33,10 @@ public class CRUDAlbum {
         db.close();
     }
 
-    //...C Cambiar devolución de albums a hashmap
-    public static HashMap<String, Album> getAllAlbums(){
+    public static ArrayList<Album> getAllAlbums(){
         DBDriver driver = DBDriver.getInstance(AlbumApp.getAppContext());
         SQLiteDatabase db = driver.getReadableDatabase();
-        HashMap<String, Album> group = new HashMap<>();
+        ArrayList<Album> group = new ArrayList<>();
 
         String sql = "SELECT * FROM "+ DBDriver.TABLE_ALBUM;
         Cursor cursor = db.rawQuery(sql, null);
@@ -48,9 +48,10 @@ public class CRUDAlbum {
                 long ut = cursor.getLong(  cursor.getColumnIndex(DBDriver.ALBUM_DATE)  );
                 Date date = new Date(ut);
                 Album tasklist = new Album(id,name,date);
-                group.put(id, tasklist);
+                group.add(tasklist);
             }while (cursor.moveToNext());
         }
+
         db.close();
         return group;
     }
@@ -67,13 +68,11 @@ public class CRUDAlbum {
         db.close();
     }
 
-    //...D Cambiar devolución de albums completos a hashmap
-    public static HashMap<String, Album> getCompleteAlbums(){
-        HashMap<String, Album> albums = getAllAlbums();
-        for (String key : albums.keySet()){
-            Album nAlbum = albums.get(key);
-            HashMap<String, Photo> photos = CRUDPhoto.getAllPhotosOfAlbum(nAlbum);
-            nAlbum.setPhotos(photos);
+    public static List<Album> getCompleteAlbums(){
+        ArrayList<Album> albums = getAllAlbums();
+        for (int i=0 ; i<albums.size() ; i++){
+            ArrayList<Photo> photos = CRUDPhoto.getAllPhotosOfAlbum(albums.get(i));
+            albums.get(i).setPhotos(photos);
         }
         return albums;
     }
