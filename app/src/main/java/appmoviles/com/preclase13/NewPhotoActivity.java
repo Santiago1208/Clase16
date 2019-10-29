@@ -72,7 +72,7 @@ public class NewPhotoActivity extends AppCompatActivity {
         photoCreateBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Photo task = new Photo(id, photoNameEt.getText().toString(), photoDescNameEt.getText().toString(), 0);
+                Photo task = new Photo(id, photoNameEt.getText().toString(), photoDescNameEt.getText().toString(), 0, album.getId());
                 CRUDPhoto.insertPhoto(album, task);
 
                 finish();

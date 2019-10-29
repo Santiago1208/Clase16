@@ -3,7 +3,7 @@ package appmoviles.com.preclase13.model.data;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import appmoviles.com.preclase13.app.AlbumApp;
 import appmoviles.com.preclase13.model.driver.DBDriver;
@@ -37,15 +37,15 @@ public class CRUDPhoto {
     }
 
 
-    public static ArrayList<Photo> getAllPhotosOfAlbum(Album album){
+    public static HashMap<String, Photo> getAllPhotosOfAlbum(Album album){
         DBDriver driver = DBDriver.getInstance(AlbumApp.getAppContext());
         SQLiteDatabase db = driver.getReadableDatabase();
-        ArrayList<Photo> group = new ArrayList<>();
+        HashMap<String, Photo> group = new HashMap<>();
 
         String sql = "SELECT * FROM $TABLE WHERE $FID = '$VFID'";
         sql = sql
-                .replace("$TABLE",DBDriver.TABLE_PHOTO)
-                .replace("$FID",DBDriver.FK_ALMBUM_PHOTO)
+                .replace("$TABLE", DBDriver.TABLE_PHOTO)
+                .replace("$FID", DBDriver.FK_ALMBUM_PHOTO)
                 .replace("$VFID",album.getId());
         Cursor cursor = db.rawQuery(sql, null);
 
@@ -55,8 +55,9 @@ public class CRUDPhoto {
                 String name = cursor.getString(cursor.getColumnIndex(DBDriver.PHOTO_NAME));
                 String desc = cursor.getString(cursor.getColumnIndex(DBDriver.PHOTO_DESC));
                 int views = cursor.getInt(cursor.getColumnIndex(DBDriver.PHOTO_VIEWS));
-                Photo task = new Photo(id, name, desc, views);
-                group.add(task);
+                String albumid = cursor.getString(cursor.getColumnIndex(DBDriver.FK_ALMBUM_PHOTO));
+                Photo task = new Photo(id, name, desc, views, albumid);
+                group.put(id,task);
             }while (cursor.moveToNext());
         }
 
@@ -71,7 +72,7 @@ public class CRUDPhoto {
         String sql = "DELETE FROM $TABLE WHERE $ID = '$FID'";
         sql = sql
                 .replace("$TABLE", DBDriver.TABLE_PHOTO)
-                .replace("$ID",DBDriver.PHOTO_ID)
+                .replace("$ID", DBDriver.PHOTO_ID)
                 .replace("$FID",photo.getId());
         db.execSQL(sql);
         db.close();
@@ -85,7 +86,7 @@ public class CRUDPhoto {
                 .replace("$TABLE", DBDriver.TABLE_PHOTO)
                 .replace("$COMPLETE", DBDriver.PHOTO_VIEWS)
                 .replace("$VCOMPLETE", ""+(photo.getViews()+1))
-                .replace("$ID",DBDriver.PHOTO_ID)
+                .replace("$ID", DBDriver.PHOTO_ID)
                 .replace("$FID",photo.getId());
         db.execSQL(sql);
         db.close();

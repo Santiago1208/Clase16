@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +34,7 @@ public class SignupActivity extends AppCompatActivity {
     private EditText signin_password;
     private EditText signin_repassword;
     private Button login_signin;
+    private TextView alreadyUserTV;
 
     //NPM
     //NODE.JS
@@ -56,7 +58,7 @@ public class SignupActivity extends AppCompatActivity {
         signin_password = findViewById(R.id.signin_password);
         signin_repassword = findViewById(R.id.signin_repassword);
         login_signin = findViewById(R.id.login_signin);
-
+        alreadyUserTV = findViewById(R.id.alreadyUserTV);
 
         login_signin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,17 +98,19 @@ public class SignupActivity extends AppCompatActivity {
                                 Date date = sdf.parse(birth);
 
 
-                                User me = new User(
+                                User user = new User(
                                         auth.getCurrentUser().getUid(),
-                                        signin_email.getText().toString().trim(),
-                                        signin_password.getText().toString().trim(),
-                                        signin_name.getText().toString().trim(),
+                                        signin_name.getText().toString(),
+                                        signin_email.getText().toString(),
                                         signin_username.getText().toString(),
+                                        signin_mobile.getText().toString(),
                                         birth,
-                                        date.getTime());
+                                        date.getTime(),
+                                        signin_password.getText().toString()
+                                );
 
-                                db.getReference().child("usuarios").child(me.getUid())
-                                        .setValue(me);
+                                db.getReference().child("usuarios").child(user.getUid())
+                                        .setValue(user);
 
                                 Intent i = new Intent(SignupActivity.this, MainActivity.class);
                                 startActivity(i);
@@ -123,6 +127,12 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+        alreadyUserTV.setOnClickListener(
+                (v) -> {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                });
 
     }
 }

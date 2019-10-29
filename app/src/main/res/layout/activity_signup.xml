@@ -18,6 +18,16 @@
             android:background="#eee"
             android:src="@drawable/ic_launcher_foreground" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/alreadyUser"
+            android:layout_marginBottom="20dp"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:id="@+id/alreadyUserTV"
+            />
+
         <EditText
             android:id="@+id/signin_email"
             android:layout_width="match_parent"
@@ -75,7 +85,7 @@
             android:id="@+id/login_signin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/iniciar_sesion" />
+            android:text="@string/registrarse" />
 
     </LinearLayout>
 </ScrollView>

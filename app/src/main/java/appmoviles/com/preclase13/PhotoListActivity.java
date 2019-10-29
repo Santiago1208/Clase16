@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import appmoviles.com.preclase13.control.adapters.PhotoAdapter;
 import appmoviles.com.preclase13.model.data.CRUDPhoto;
@@ -90,10 +91,10 @@ public class PhotoListActivity extends AppCompatActivity {
     }
 
     private void refreshTasks() {
-        ArrayList<Photo> group = CRUDPhoto.getAllPhotosOfAlbum(album);
+        HashMap<String, Photo> group = CRUDPhoto.getAllPhotosOfAlbum(album);
         adapter.clear();
-        for(int i=0 ; i<group.size() ; i++){
-            adapter.addPhoto(group.get(i));
+        for(String key : group.keySet()){
+            adapter.addPhoto(group.get(key));
         }
     }
 

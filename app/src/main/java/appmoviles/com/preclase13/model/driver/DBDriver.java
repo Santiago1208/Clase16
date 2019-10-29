@@ -17,7 +17,7 @@ public class DBDriver extends SQLiteOpenHelper {
 
 
     public static final String DBNAME = "albumappfinal";
-    public static final int DBVERSION = 10;
+    public static final int DBVERSION = 15;
 
 
     //TABLE TASKLIST

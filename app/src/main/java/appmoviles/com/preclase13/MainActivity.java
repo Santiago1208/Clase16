@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import appmoviles.com.preclase13.model.data.CRUDAlbum;
@@ -35,12 +36,13 @@ import appmoviles.com.preclase13.util.HTTPSWebUtilDomi;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView LVAlbum;
-    ArrayAdapter<Album> adapter;
-    ArrayList<Album> list;
-    Button addAlbumBtn;
-    Button friendsBtn;
-    RelativeLayout controlPanel;
+    private ListView LVAlbum;
+    private ArrayAdapter<Album> adapter;
+    private ArrayList<Album> list;
+    private Button addAlbumBtn;
+    private Button friendsBtn;
+    private Button syncBtn;
+    private RelativeLayout controlPanel;
     FirebaseAuth auth;
     FirebaseDatabase db;
 
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 Toast.makeText(MainActivity.this,
-                        "Hola "+user.getName(),
+                        "Hola " + user.getName(),
                         Toast.LENGTH_LONG).show();
             }
 
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         addAlbumBtn = findViewById(R.id.addAlbumBtn);
         friendsBtn = findViewById(R.id.friendsBtn);
         controlPanel = findViewById(R.id.controlPanel);
-
+        syncBtn = findViewById(R.id.syncBtn);
 
         LVAlbum.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -134,31 +136,26 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        syncBtn.setOnClickListener(
+                (v) -> {
+
+                }
+        );
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshTaskList();
-        List<Album> info = CRUDAlbum.getCompleteAlbums();
-        Gson gson = new Gson();
-        String json = gson.toJson(info);
-        Log.e(">>>",json);
-        new Thread(()->{
-            try {
-                HTTPSWebUtilDomi utilDomi = new HTTPSWebUtilDomi();
-                utilDomi.POSTrequest("https://camara-4a96c.firebaseio.com/.json", "");
-            }catch (IOException ex){
-                ex.printStackTrace();
-            }
-        }).start();
     }
 
     private void refreshTaskList() {
-        ArrayList<Album> group = CRUDAlbum.getAllAlbums();
+        HashMap<String, Album> group = CRUDAlbum.getAllAlbums();
         list.clear();
-        for(int i=0 ; i<group.size() ; i++){
-            list.add(group.get(i));
+        for(String key : group.keySet()){
+            Album nAlbum = group.get(key);
+            list.add(nAlbum);
         }
         adapter.notifyDataSetChanged();
     }

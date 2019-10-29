@@ -5,9 +5,28 @@
     android:padding="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/atrasMsj"
+        android:textSize="20dp"
+        android:layout_marginBottom="40dp"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/friendList"></ListView>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/albumList"
+        android:visibility="gone"></ListView>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/photoList"
+        android:visibility="gone"></ListView>
 
 </LinearLayout>

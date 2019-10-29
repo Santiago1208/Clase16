@@ -25,6 +25,15 @@
         android:id="@+id/controlPanel">
 
         <Button
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:text="S"
+            android:id="@+id/syncBtn"/>
+
+        <Button
             android:id="@+id/addAlbumBtn"
             android:layout_width="60dp"
             android:layout_height="60dp"

@@ -7,10 +7,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:src="@drawable/ic_launcher_foreground"
         android:background="#eee"
+        android:layout_marginBottom="50dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/noUserYetTV"
+        android:text="@string/noUser"
+        android:textSize="20dp"
+        android:textAlignment="center"
         android:layout_marginBottom="50dp"
         />
 
