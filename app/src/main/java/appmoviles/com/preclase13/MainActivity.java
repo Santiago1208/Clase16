@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -30,7 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import appmoviles.com.preclase13.model.data.CRUDAlbum;
+import appmoviles.com.preclase13.model.data.CRUDPhoto;
 import appmoviles.com.preclase13.model.entity.Album;
+import appmoviles.com.preclase13.model.entity.Photo;
 import appmoviles.com.preclase13.model.entity.User;
 import appmoviles.com.preclase13.util.HTTPSWebUtilDomi;
 
@@ -55,21 +58,30 @@ public class MainActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
 
-        db.getReference().child("usuarios")
-                .child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Toast.makeText(MainActivity.this,
-                        "Hola " + user.getName(),
-                        Toast.LENGTH_LONG).show();
-            }
+        if(auth.getCurrentUser() == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        db.getReference().child("users")
+                .child(auth.getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //Response
+                        User user = dataSnapshot.getValue(User.class);
+                        Toast.makeText(MainActivity.this,
+                                "Hola "+user.getName(),
+                                Toast.LENGTH_LONG).show();
+                    }
 
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
 
         //0...
@@ -140,12 +152,44 @@ public class MainActivity extends AppCompatActivity {
 
         signOutBtn.setOnClickListener(
                 (v) -> {
-                    
+                    auth.signOut();
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
                 }
         );
 
         syncBtn.setOnClickListener(
                 (v) -> {
+                    HashMap<String, Album> completeInfo =
+                            CRUDAlbum.getCompleteAlbums();
+                    db.getReference().child("completeAlbums")
+                            .child(auth.getCurrentUser().getUid())
+                            .setValue(completeInfo);
+
+
+                    HashMap<String, Album> albums = CRUDAlbum.getAllAlbums();
+                    for(String keyAlbum : albums.keySet()){
+                        Album nAlbum = albums.get(keyAlbum);
+                        nAlbum.setUserID(auth.getCurrentUser().getUid());
+
+                        db.getReference().child("albums")
+                                .child(auth.getCurrentUser().getUid())
+                                .child(nAlbum.getId())
+                                .setValue(nAlbum);
+
+                        HashMap<String, Photo> photos =
+                                CRUDPhoto.getAllPhotosOfAlbum(nAlbum);
+                        for(String photoKey : photos.keySet()){
+                            Photo nPhoto = photos.get(photoKey);
+                            db.getReference()
+                                    .child("photos")
+                                    .child(nAlbum.getId())
+                                    .child(nPhoto.getId())
+                                    .setValue(nPhoto);
+
+                        }
+
+                    }
 
                 }
         );
