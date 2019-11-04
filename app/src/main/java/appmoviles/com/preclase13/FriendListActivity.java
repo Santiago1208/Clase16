@@ -16,8 +16,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import appmoviles.com.preclase13.control.adapters.PhotoAdapter;
 import appmoviles.com.preclase13.model.entity.Album;
 import appmoviles.com.preclase13.model.entity.Friend;
+import appmoviles.com.preclase13.model.entity.Photo;
 
 public class FriendListActivity extends AppCompatActivity {
 
@@ -31,6 +33,8 @@ public class FriendListActivity extends AppCompatActivity {
     private ArrayList<Album> albumArrayList;
 
     private ListView photoList;
+    private PhotoAdapter photoAdapter;
+
     FirebaseDatabase db;
 
 
@@ -60,6 +64,9 @@ public class FriendListActivity extends AppCompatActivity {
                 albumArrayList
         );
         albumList.setAdapter(albumArrayAdapter);
+
+        photoAdapter = new PhotoAdapter();
+        photoList.setAdapter(photoAdapter);
 
         db.getReference().child("friends")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -103,6 +110,33 @@ public class FriendListActivity extends AppCompatActivity {
 
                                 }
                             });
+                }
+        );
+
+        albumList.setOnItemClickListener(
+                (adapterView, view, i, l) -> {
+                    Album album = albumArrayList.get(i);
+                    albumList.setVisibility(View.GONE);
+                    photoList.setVisibility(View.VISIBLE);
+
+                    db.getReference()
+                            .child("photos")
+                            .child(album.getId())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot child : dataSnapshot.getChildren()){
+                                        Photo photo = child.getValue(Photo.class);
+                                        photoAdapter.addPhoto(photo);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
                 }
         );
 

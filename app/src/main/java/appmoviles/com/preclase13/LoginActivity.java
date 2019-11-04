@@ -43,13 +43,18 @@ public class LoginActivity extends AppCompatActivity {
                     auth.signInWithEmailAndPassword(
                             login_email.getText().toString().trim(),
                             login_password.getText().toString().trim()
-                    ).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Intent intent = new Intent(this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
+                    ).addOnCompleteListener(
+                            new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }
+                            }
+                    );
 
 
                 }
