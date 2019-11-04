@@ -77,4 +77,13 @@ public class CRUDAlbum {
         }
         return albums;
     }
+
+    public static void deleteAllAlbums(){
+        DBDriver driver = DBDriver.getInstance(AlbumApp.getAppContext());
+        SQLiteDatabase db = driver.getWritableDatabase();
+        String sql = "DELETE FROM $TABLE";
+        sql = sql.replace("$TABLE", DBDriver.TABLE_ALBUM);
+        db.execSQL(sql);
+        db.close();
+    }
 }

@@ -91,4 +91,13 @@ public class CRUDPhoto {
         db.execSQL(sql);
         db.close();
     }
+
+    public static void deleteAllPhotos(){
+        DBDriver driver = DBDriver.getInstance(AlbumApp.getAppContext());
+        SQLiteDatabase db = driver.getWritableDatabase();
+        String sql = "DELETE FROM $TABLE";
+        sql = sql.replace("$TABLE", DBDriver.TABLE_PHOTO);
+        db.execSQL(sql);
+        db.close();
+    }
 }
