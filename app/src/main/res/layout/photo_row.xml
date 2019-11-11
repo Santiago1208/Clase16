@@ -73,6 +73,8 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:id="@+id/commentsPhotoBtn"
-        android:text="..."/>
+
+        android:backgroundTint="@color/colorAccent"
+        android:background="@drawable/baseline_comment_white_48"/>
 
 </RelativeLayout>

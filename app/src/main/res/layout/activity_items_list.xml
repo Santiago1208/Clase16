@@ -32,6 +32,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
         android:id="@+id/addPhotoBtn"
-        android:text="@string/plus"/>
+        android:backgroundTint="@color/colorPrimary"
+        android:background="@drawable/baseline_add_circle_white_48"/>
 
 </RelativeLayout>

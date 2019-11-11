@@ -12,16 +12,16 @@
         <EditText
             android:layout_weight="10"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:hint="Comentario"
             android:id="@+id/comment_et"/>
 
         <Button
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send"
-            android:id="@+id/comment_btn"/>
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:id="@+id/comment_btn"
+            android:background="@drawable/baseline_send_white_48"/>
 
     </LinearLayout>
 

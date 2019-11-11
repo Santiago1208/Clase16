@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ public class FriendListActivity extends AppCompatActivity {
 
     private ListView photoList;
     private PhotoAdapter photoAdapter;
+    private Button backButton;
 
     FirebaseDatabase db;
 
@@ -67,6 +69,7 @@ public class FriendListActivity extends AppCompatActivity {
 
         photoAdapter = new PhotoAdapter();
         photoList.setAdapter(photoAdapter);
+        backButton = findViewById(R.id.back_button);
 
         db.getReference().child("friends")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -139,6 +142,18 @@ public class FriendListActivity extends AppCompatActivity {
 
                 }
         );
+
+        backButton.setOnClickListener((v)->{
+            if( photoList.getVisibility() == View.VISIBLE ){
+                photoList.setVisibility(View.GONE);
+                albumList.setVisibility(View.VISIBLE);
+            }else if( albumList.getVisibility() == View.VISIBLE ){
+                albumList.setVisibility(View.GONE);
+                friendList.setVisibility(View.VISIBLE);
+            }else if( friendList.getVisibility() == View.VISIBLE ){
+                finish();
+            }
+        });
 
     }
 }

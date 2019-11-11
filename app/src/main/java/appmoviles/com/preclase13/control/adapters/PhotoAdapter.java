@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,7 +34,7 @@ public class PhotoAdapter extends BaseAdapter {
     ArrayList<Photo> photos;
 
 
-    public PhotoAdapter(){
+    public PhotoAdapter() {
         photos = new ArrayList<>();
     }
 
@@ -49,6 +56,7 @@ public class PhotoAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
+
         AppCompatActivity ref = (AppCompatActivity) viewGroup.getContext();
 
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
@@ -60,15 +68,22 @@ public class PhotoAdapter extends BaseAdapter {
         Button commentsPhotoBtn = rowView.findViewById(R.id.commentsPhotoBtn);
 
         rowName.setText(photos.get(i).getName());
-        rowViews.setText("Views: "+photos.get(i).getViews());
+        rowViews.setText("Views: " + photos.get(i).getViews());
         rowDesc.setText(photos.get(i).getDescription());
 
-        File file = new File(viewGroup.getContext().getExternalFilesDir(null) + "/" + photos.get(i).getId() + ".png");
-        Bitmap imagen = BitmapFactory.decodeFile(file.toString());
-        rowImage.setImageBitmap(imagen);
 
-        commentsPhotoBtn.setOnClickListener((v)->{
+        File file = new File(viewGroup.getContext().getExternalFilesDir(null) + "/" + photos.get(i).getId() + ".png");
+        if (file.exists()) {
+            Bitmap imagen = BitmapFactory.decodeFile(file.toString());
+            rowImage.setImageBitmap(imagen);
+        }else{
+            loadImage(i, rowImage);
+        }
+
+
+        commentsPhotoBtn.setOnClickListener((v) -> {
             CommentsFragment fragment = new CommentsFragment();
+            fragment.setPhoto(photos.get(i));
             fragment.show(ref.getSupportFragmentManager(), "comments");
         });
 
@@ -76,7 +91,7 @@ public class PhotoAdapter extends BaseAdapter {
 
     }
 
-    public void addPhoto(Photo photo){
+    public void addPhoto(Photo photo) {
         photos.add(photo);
         notifyDataSetChanged();
     }
@@ -84,4 +99,16 @@ public class PhotoAdapter extends BaseAdapter {
     public void clear() {
         photos.clear();
     }
+
+    public void loadImage(int i, ImageView rowImage) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storage.getReference().child("photos")
+                .child(photos.get(i).getId() + ".png")
+                .getDownloadUrl().addOnSuccessListener(uri -> {
+            Log.e(">>>", uri.toString());
+            Glide.with(rowImage).load(uri.toString())
+                    .into(rowImage);
+        });
+    }
+
 }

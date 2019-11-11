@@ -25,40 +25,44 @@
         android:id="@+id/controlPanel">
 
         <Button
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
-            android:text="S"
+            android:background="@drawable/baseline_cloud_upload_white_48"
+            android:backgroundTint="@color/colorPrimary"
             android:id="@+id/syncBtn"/>
 
         <Button
             android:id="@+id/addAlbumBtn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
-            android:text="@string/plus" />
+            android:backgroundTint="@color/colorPrimary"
+            android:background="@drawable/baseline_add_circle_white_36"/>
 
         <Button
             android:id="@+id/signOutBtn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:text="C" />
+            android:background="@drawable/baseline_backspace_white_48"
+            android:backgroundTint="@color/colorPrimary"/>
 
         <Button
             android:id="@+id/friendsBtn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="20dp"
             android:layout_marginBottom="20dp"
-            android:text="A" />
+            android:background="@drawable/baseline_people_white_48"
+            android:backgroundTint="@color/colorPrimary"/>
     </RelativeLayout>
 
 </RelativeLayout>

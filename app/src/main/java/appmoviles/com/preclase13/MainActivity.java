@@ -23,8 +23,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout controlPanel;
     FirebaseAuth auth;
     FirebaseDatabase db;
+    FirebaseStorage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
 
         if(auth.getCurrentUser() == null){
             Intent intent = new Intent(this, LoginActivity.class);
@@ -82,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+
+
+
 
 
         //0...
@@ -167,6 +176,12 @@ public class MainActivity extends AppCompatActivity {
                             .setValue(completeInfo);
 
 
+                    //Sincronización por tablas
+                    db.getReference().child("albums")
+                            .child(auth.getCurrentUser().getUid())
+                            .setValue(null);
+
+
                     HashMap<String, Album> albums = CRUDAlbum.getAllAlbums();
                     for(String keyAlbum : albums.keySet()){
                         Album nAlbum = albums.get(keyAlbum);
@@ -176,6 +191,11 @@ public class MainActivity extends AppCompatActivity {
                                 .child(auth.getCurrentUser().getUid())
                                 .child(nAlbum.getId())
                                 .setValue(nAlbum);
+
+                        db.getReference().child("photos")
+                                .child(nAlbum.getId())
+                                .setValue(null);
+
 
                         HashMap<String, Photo> photos =
                                 CRUDPhoto.getAllPhotosOfAlbum(nAlbum);
@@ -190,9 +210,59 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     }
+                    //Subir imagenes
+                    try{
+                        File folder = getExternalFilesDir(null);
+                        String[] files = folder.list();
+                        for(int i=0 ; i<files.length ; i++){
+                            Log.e(">>>", files[i]);//Solo muestra el nombre del archivo
+                            File imageFile = new File(folder.toString()+"/"+files[i]);
+                            FileInputStream fis = new FileInputStream(imageFile);
+
+                            if(storage
+                                    .getReference()
+                                    .child("photos")
+                                    .child(files[i])
+                                    .putStream(fis).isSuccessful()){
+                                continue;
+                            }
+
+                        }
+
+                    }catch (FileNotFoundException ex){
+
+                    }
+
 
                 }
         );
+
+        db.getReference().child("completeAlbums")
+                .child(auth.getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        CRUDPhoto.deleteAllPhotos();
+                        CRUDAlbum.deleteAllAlbums();
+                        //El for de los albumes
+                        for(DataSnapshot album : dataSnapshot.getChildren()){
+                            Album nAlbum = album.getValue(Album.class);
+                            CRUDAlbum.insertAlbum(nAlbum);
+                            //El for de las fotos
+                            for(String photoKey : nAlbum.getPhotos().keySet()){
+                                Photo photo = nAlbum.getPhotos().get(photoKey);
+                                CRUDPhoto.insertPhoto(nAlbum, photo);
+                                //BROADCAST RECEIVER
+                            }
+                        }
+                        refreshTaskList();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
     }
 
