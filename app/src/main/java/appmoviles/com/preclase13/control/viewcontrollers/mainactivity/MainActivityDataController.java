@@ -22,6 +22,7 @@ import appmoviles.com.preclase13.model.data.CRUDPhoto;
 import appmoviles.com.preclase13.model.entity.Album;
 import appmoviles.com.preclase13.model.entity.Photo;
 import appmoviles.com.preclase13.model.entity.User;
+import appmoviles.com.preclase13.model.remote.DatabaseConstants;
 
 public class MainActivityDataController {
     private FirebaseAuth auth;
@@ -47,7 +48,7 @@ public class MainActivityDataController {
     }
 
     private void downloadAllDataForSync() {
-        db.getReference().child("completeAlbums")
+        db.getReference().child(DatabaseConstants.EMBEDDING)
                 .child(auth.getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -75,7 +76,7 @@ public class MainActivityDataController {
     }
 
     private void downloadOwnUser() {
-        db.getReference().child("users")
+        db.getReference().child(DatabaseConstants.USERS)
                 .child(auth.getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -102,7 +103,7 @@ public class MainActivityDataController {
                 FileInputStream fis = new FileInputStream(imageFile);
                 if (storage
                         .getReference()
-                        .child("photos")
+                        .child(DatabaseConstants.PHOTOS)
                         .child(files[i])
                         .putStream(fis).isSuccessful()) {
                     continue;
@@ -116,7 +117,7 @@ public class MainActivityDataController {
     }
 
     private void syncTables() {
-        db.getReference().child("albums")
+        db.getReference().child(DatabaseConstants.ALBUMS)
                 .child(auth.getCurrentUser().getUid())
                 .setValue(null);
 
@@ -125,12 +126,12 @@ public class MainActivityDataController {
             Album nAlbum = albums.get(keyAlbum);
             nAlbum.setUserID(auth.getCurrentUser().getUid());
 
-            db.getReference().child("albums")
+            db.getReference().child(DatabaseConstants.ALBUMS)
                     .child(auth.getCurrentUser().getUid())
                     .child(nAlbum.getId())
                     .setValue(nAlbum);
 
-            db.getReference().child("photos")
+            db.getReference().child(DatabaseConstants.PHOTOS)
                     .child(nAlbum.getId())
                     .setValue(null);
 
@@ -139,7 +140,7 @@ public class MainActivityDataController {
             for (String photoKey : photos.keySet()) {
                 Photo nPhoto = photos.get(photoKey);
                 db.getReference()
-                        .child("photos")
+                        .child(DatabaseConstants.PHOTOS)
                         .child(nAlbum.getId())
                         .child(nPhoto.getId())
                         .setValue(nPhoto);
@@ -151,7 +152,7 @@ public class MainActivityDataController {
     private void syncEmbedding() {
         HashMap<String, Album> completeInfo =
                 CRUDAlbum.getCompleteAlbums();
-        db.getReference().child("completeAlbums")
+        db.getReference().child(DatabaseConstants.EMBEDDING)
                 .child(auth.getCurrentUser().getUid())
                 .setValue(completeInfo);
     }
