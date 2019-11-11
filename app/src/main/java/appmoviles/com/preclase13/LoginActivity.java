@@ -14,7 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
+import appmoviles.com.preclase13.view.activities.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
 

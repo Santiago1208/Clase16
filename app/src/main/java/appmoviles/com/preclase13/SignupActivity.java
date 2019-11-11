@@ -1,6 +1,5 @@
 package appmoviles.com.preclase13;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -23,6 +22,7 @@ import java.util.Date;
 
 import appmoviles.com.preclase13.model.entity.Friend;
 import appmoviles.com.preclase13.model.entity.User;
+import appmoviles.com.preclase13.view.activities.MainActivity;
 import appmoviles.com.preclase13.view.custom.ScrolledDatePicker;
 
 public class SignupActivity extends AppCompatActivity {

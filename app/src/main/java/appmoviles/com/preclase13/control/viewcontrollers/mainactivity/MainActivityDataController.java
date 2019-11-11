@@ -1,8 +1,6 @@
-package appmoviles.com.preclase13.control.viewcontrollers;
+package appmoviles.com.preclase13.control.viewcontrollers.mainactivity;
 
-import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -39,8 +37,6 @@ public class MainActivityDataController {
         checkSignedIn();
         downloadOwnUser();
         downloadAllDataForSync();
-
-
     }
 
     private void checkSignedIn() {
@@ -66,7 +62,6 @@ public class MainActivityDataController {
                             for (String photoKey : nAlbum.getPhotos().keySet()) {
                                 Photo photo = nAlbum.getPhotos().get(photoKey);
                                 CRUDPhoto.insertPhoto(nAlbum, photo);
-                                //BROADCAST RECEIVER
                             }
                         }
                         observer.onAllDataDownloaded();
@@ -148,7 +143,6 @@ public class MainActivityDataController {
                         .child(nAlbum.getId())
                         .child(nPhoto.getId())
                         .setValue(nPhoto);
-
             }
 
         }

@@ -1,15 +1,12 @@
-package appmoviles.com.preclase13.control.viewcontrollers;
+package appmoviles.com.preclase13.control.viewcontrollers.mainactivity;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
@@ -18,12 +15,12 @@ import java.util.HashMap;
 
 import appmoviles.com.preclase13.FriendListActivity;
 import appmoviles.com.preclase13.LoginActivity;
-import appmoviles.com.preclase13.MainActivity;
 import appmoviles.com.preclase13.NewAlbumActivity;
 import appmoviles.com.preclase13.PhotoListActivity;
 import appmoviles.com.preclase13.model.data.CRUDAlbum;
 import appmoviles.com.preclase13.model.entity.Album;
 import appmoviles.com.preclase13.model.entity.User;
+import appmoviles.com.preclase13.view.activities.MainActivity;
 
 
 public class MainActivityController implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener, MainActivityCallbacks {
