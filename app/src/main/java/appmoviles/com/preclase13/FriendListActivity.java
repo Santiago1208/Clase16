@@ -6,6 +6,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -36,6 +39,7 @@ public class FriendListActivity extends AppCompatActivity {
     private ListView photoList;
     private PhotoAdapter photoAdapter;
     private Button backButton;
+    private TextView loadMore;
 
     FirebaseDatabase db;
 
@@ -51,6 +55,7 @@ public class FriendListActivity extends AppCompatActivity {
         friendList = findViewById(R.id.friendList);
         albumList = findViewById(R.id.albumList);
         photoList = findViewById(R.id.photoList);
+        loadMore = findViewById(R.id.load_more);
 
         arrayFriends = new ArrayList<>();
         friendArrayAdapter = new ArrayAdapter<>(
@@ -102,7 +107,7 @@ public class FriendListActivity extends AppCompatActivity {
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for(DataSnapshot album : dataSnapshot.getChildren()){
+                                    for (DataSnapshot album : dataSnapshot.getChildren()) {
                                         Album alb = album.getValue(Album.class);
                                         albumArrayList.add(alb);
                                     }
@@ -122,6 +127,8 @@ public class FriendListActivity extends AppCompatActivity {
                     Album album = albumArrayList.get(i);
                     albumList.setVisibility(View.GONE);
                     photoList.setVisibility(View.VISIBLE);
+                    loadMore.setVisibility(View.VISIBLE);
+
 
                     db.getReference()
                             .child("photos")
@@ -141,20 +148,29 @@ public class FriendListActivity extends AppCompatActivity {
                                 }
                             });
 
+
                 }
         );
 
-        backButton.setOnClickListener((v)->{
-            if( photoList.getVisibility() == View.VISIBLE ){
+        backButton.setOnClickListener((v) -> {
+            if (photoList.getVisibility() == View.VISIBLE) {
                 photoList.setVisibility(View.GONE);
+                loadMore.setVisibility(View.GONE);
                 albumList.setVisibility(View.VISIBLE);
-            }else if( albumList.getVisibility() == View.VISIBLE ){
+            } else if (albumList.getVisibility() == View.VISIBLE) {
                 albumList.setVisibility(View.GONE);
                 friendList.setVisibility(View.VISIBLE);
-            }else if( friendList.getVisibility() == View.VISIBLE ){
+            } else if (friendList.getVisibility() == View.VISIBLE) {
                 finish();
             }
         });
+
+
+        loadMore.setOnClickListener(
+                (v) -> {
+
+                }
+        );
 
     }
 
