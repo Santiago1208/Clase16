@@ -39,6 +39,7 @@ public class FriendListActivity extends AppCompatActivity {
 
     FirebaseDatabase db;
 
+    private Friend friend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +92,13 @@ public class FriendListActivity extends AppCompatActivity {
 
         friendList.setOnItemClickListener(
                 (adapterView, view, i, l) -> {
-                    Friend f = arrayFriends.get(i);
+                    friend = arrayFriends.get(i);
 
                     friendList.setVisibility(View.GONE);
                     albumList.setVisibility(View.VISIBLE);
 
                     db.getReference().child("albums")
-                            .child(f.getUid())
+                            .child(friend.getUid())
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
