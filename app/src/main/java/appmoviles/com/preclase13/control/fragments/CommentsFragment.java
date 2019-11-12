@@ -2,7 +2,6 @@ package appmoviles.com.preclase13.control.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import appmoviles.com.preclase13.R;
+import appmoviles.com.preclase13.model.entity.Comment;
 import appmoviles.com.preclase13.model.entity.Photo;
 
 public class CommentsFragment extends DialogFragment {
@@ -31,8 +31,8 @@ public class CommentsFragment extends DialogFragment {
     private EditText commentEt;
     private Button commentBtn;
     private ListView commentList;
-    private ArrayAdapter<String> commentsAdapter;
-    private ArrayList<String> arrayComments;
+    private ArrayAdapter<Comment> commentsAdapter;
+    private ArrayList<Comment> arrayComments;
     private Photo photo;
     FirebaseDatabase db;
 
@@ -52,12 +52,20 @@ public class CommentsFragment extends DialogFragment {
 
 
         commentBtn.setOnClickListener((v)->{
-            String comentario = commentEt.getText().toString();
+            //Crear una llave
+            String uid = db.getReference()
+                    .child("comments")
+                    .child(photo.getId())
+                    .push().getKey();
+            //Sacar el texto
+            String text = commentEt.getText().toString();
+
+            Comment comment = new Comment(uid, text);
             db.getReference()
                     .child("comments")
                     .child(photo.getId())
-                    .push()
-                    .setValue(comentario);
+                    .child(comment.getUid())
+                    .setValue(comment);
 
             hideSoftKeyboard(v);
         });
@@ -68,7 +76,7 @@ public class CommentsFragment extends DialogFragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         arrayComments.clear();
                         for(DataSnapshot child : dataSnapshot.getChildren()){
-                            String comment = child.getValue(String.class);
+                            Comment comment = child.getValue(Comment.class);
                             arrayComments.add(comment);
                         }
                         commentsAdapter.notifyDataSetChanged();
